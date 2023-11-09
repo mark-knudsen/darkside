@@ -1,25 +1,22 @@
-import logo from './logo.svg';
+import React, { useEffect, useState } from 'react'
+import axios from 'axios'
 import './App.css';
 
-function App() {
+const App = () => {
+  const [posts, setPosts] = useState([])
+
+  useEffect(() => {
+    axios.get('http://localhost/wpapi/wp-json/wp/v2/posts?_embed') // change this path!
+      .then((res) => setPosts(res.data))
+  }, [])
+
+  const postsJsx = posts.map((post) => (
+    <li key={post.id} dangerouslySetInnerHTML={{ __html: post.content.rendered }}></li>
+  ))
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    <ul>{postsJsx}</ul>
+  )
 }
 
 export default App;
